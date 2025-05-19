@@ -1,6 +1,7 @@
 import tkinter as tk
 from win32gui import SetWindowLong, GetWindowLong, SetLayeredWindowAttributes
 from win32con import WS_EX_LAYERED, WS_EX_TRANSPARENT, GWL_EXSTYLE
+import subprocess
 
 def setClickThrough(hwnd):
     try:
@@ -20,5 +21,20 @@ if __name__ == "__main__":
     window.attributes('-transparentcolor', '#000000', '-topmost', 1)
 
     setClickThrough(window.winfo_id())
+
+    aumid = '21676OptimiliaStudios.AquileReader_k42naep6bwmrc!App'
+    command_to_run = f'explorer shell:appsfolder\\{aumid}'
+    print(f'Attempting to launch Aquile Reader using command: {command_to_run}')
+
+    try:
+        subprocess.run(command_to_run, shell=True, check=True, capture_output=True, text=True)
+        print('Aquile Reader launched successfully.')
+    except subprocess.CalledProcessError as e:
+        print(f'Error executing command: {e}')
+        print(f'Stderr: {e.stderr}')
+    except FileNotFoundError:
+        print("Error: 'explorer' command not found")
+    except Exception as e:
+        print(f'An unexpected error occurred: {e}')
 
     window.mainloop()
